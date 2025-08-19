@@ -1,0 +1,6 @@
+@AT2CityLinkAPI_HostAddress = http://localhost:5019
+
+GET {{AT2CityLinkAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
