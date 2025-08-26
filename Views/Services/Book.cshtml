@@ -1,27 +1,23 @@
-@model ServiceBooking
-
 @{
     ViewData["Title"] = "Book a Service";
 }
 
-<h2>Book a Community Service</h2>
+<h1>@ViewData["Title"]</h1>
 
-<form asp-action="Book" method="post">
-    <label>Full Name</label>
-    <input asp-for="FullName" class="form-control" />
+<form asp-action="Book" method="post" class="card">
+    <div>
+        <label for="serviceType">Service Type</label>
+        <select id="serviceType" name="serviceType">
+            <option value="waste">Waste Management</option>
+            <option value="event">Event Booking</option>
+            <option value="rates">Rates Enquiry</option>
+        </select>
+    </div>
 
-    <label>Email</label>
-    <input asp-for="Email" class="form-control" />
-
-    <label>Service Type</label>
-    <select asp-for="ServiceType" class="form-control">
-        <option>Event Hall Booking</option>
-        <option>Waste Pickup</option>
-        <option>Rates Inquiry</option>
-    </select>
-
-    <label>Date</label>
-    <input asp-for="PreferredDate" type="date" class="form-control" />
+    <div>
+        <label for="date">Preferred Date</label>
+        <input type="date" id="date" name="date" />
+    </div>
 
     <button type="submit">Submit Booking</button>
 </form>

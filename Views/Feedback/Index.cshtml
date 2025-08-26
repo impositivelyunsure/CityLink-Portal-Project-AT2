@@ -4,17 +4,29 @@
     ViewData["Title"] = "Feedback";
 }
 
-<h2>Send Us Your Feedback</h2>
+<h1>Send Us Your Feedback</h1>
 
 <form asp-action="Submit" method="post">
-    <label>Your Name</label>
-    <input asp-for="Name" class="form-control" />
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-    <label>Email</label>
-    <input asp-for="Email" class="form-control" />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" aria-required="true" />
+        <span asp-validation-for="Name"></span>
+    </div>
 
-    <label>Message</label>
-    <textarea asp-for="Message" class="form-control"></textarea>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" inputmode="email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+    <div>
+        <label asp-for="Message"></label>
+        <textarea asp-for="Message" rows="5" aria-required="true"></textarea>
+        <span asp-validation-for="Message"></span>
+    </div>
 
     <button type="submit">Send</button>
 </form>

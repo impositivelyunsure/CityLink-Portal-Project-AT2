@@ -1,0 +1,41 @@
+@model IEnumerable<SCP.Services.NavigationService.MenuItem>
+
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
+    <a class="navbar-brand" href="/">Smart Community Portal</a>
+    <ul class="nav">
+        @foreach (var item in Model)
+        {
+            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            var isActive = item.Url.Trim('/').Equals(currentController, StringComparison.OrdinalIgnoreCase);
+
+            <li>
+                <a class="nav-link @(isActive ? "active" : "")" href="@item.Url" aria-current="@(isActive ? "page" : null)">
+                    @item.Title
+                </a>
+            </li>
+        }
+    </ul>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+        ☰
+    </button>
+</nav>
+
+<script>
+    (function () {
+        const btn = document.querySelector('.nav-toggle');
+        const nav = document.querySelector('.nav');
+        if (!btn || !nav) return;
+        btn.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('show');
+            btn.setAttribute('aria-expanded', String(isOpen));
+        });
+        // close when clicking outside on small screens
+        document.addEventListener('click', (e) => {
+            if (!nav.classList.contains('show')) return;
+            if (!nav.contains(e.target) && !btn.contains(e.target)) {
+                nav.classList.remove('show');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
+</script>

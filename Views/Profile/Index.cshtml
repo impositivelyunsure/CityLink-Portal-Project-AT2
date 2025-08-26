@@ -1,13 +1,11 @@
-@model UserProfile
-
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "User Profile";
 }
 
-<h2>My Profile</h2>
+<h1>@ViewData["Title"]</h1>
 
-<p><strong>Name:</strong> @Model.FullName</p>
-<p><strong>Email:</strong> @Model.Email</p>
-<p><strong>Member Since:</strong> @Model.MemberSince.ToShortDateString()</p>
-
-<a href="/Profile/Edit">Edit Profile</a>
+<div class="card">
+    <p><strong>Name:</strong> John Doe</p>
+    <p><strong>Email:</strong> johndoe@example.com</p>
+    <p><strong>Member since:</strong> 2024</p>
+</div>
