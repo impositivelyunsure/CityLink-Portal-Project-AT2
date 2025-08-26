@@ -5,7 +5,7 @@ namespace AgileAPIAT2.Models
 {
     public class Booking
     {
-        // api model 
+        // Booking Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
