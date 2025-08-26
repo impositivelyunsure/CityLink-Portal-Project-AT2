@@ -1,0 +1,17 @@
+@model IEnumerable<Announcement>
+
+@{
+    ViewData["Title"] = "Announcements";
+}
+
+<h2>Community Announcements</h2>
+
+<ul>
+@foreach (var announcement in Model)
+{
+    <li>
+        <strong>@announcement.Title</strong> - @announcement.DatePosted.ToShortDateString()
+        <p>@announcement.Description</p>
+    </li>
+}
+</ul>

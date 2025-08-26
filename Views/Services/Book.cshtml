@@ -1,0 +1,27 @@
+@model ServiceBooking
+
+@{
+    ViewData["Title"] = "Book a Service";
+}
+
+<h2>Book a Community Service</h2>
+
+<form asp-action="Book" method="post">
+    <label>Full Name</label>
+    <input asp-for="FullName" class="form-control" />
+
+    <label>Email</label>
+    <input asp-for="Email" class="form-control" />
+
+    <label>Service Type</label>
+    <select asp-for="ServiceType" class="form-control">
+        <option>Event Hall Booking</option>
+        <option>Waste Pickup</option>
+        <option>Rates Inquiry</option>
+    </select>
+
+    <label>Date</label>
+    <input asp-for="PreferredDate" type="date" class="form-control" />
+
+    <button type="submit">Submit Booking</button>
+</form>
