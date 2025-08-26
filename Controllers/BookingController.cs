@@ -4,64 +4,88 @@ using AgileAPIAT2.Models;
 
 namespace AgileAPIAT2.Controllers
 {
-   
-        [ApiController]
-        [Route("api/[controller]")]
-        public class BookingController : ControllerBase
+
+    [ApiController]
+    [Route("api/[controller]")]
+    // this is the book controller class 
+    public class BookingController : ControllerBase
+    {
+        private readonly BookingService _bookingService;
+
+        public BookingController(BookingService bookingService)
         {
-            private readonly BookingService _bookingService;
+            _bookingService = bookingService;
+        }
 
-            public BookingController(BookingService restaurantService)
-            {
-                _bookingService = restaurantService;
-            }
+        // Method for retrieving all (hard coded limit of 10) bookings.
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int skip = 0, [FromQuery] int limit = 10)
+        {
+            var booking = await _bookingService.GetAllAsync(skip, limit);
+            return Ok(booking);
+        }
 
-            [HttpGet]
-            public async Task<IActionResult> GetAll([FromQuery] int skip = 0, [FromQuery] int limit = 10)
-            {
-                var booking = await _bookingService.GetAllAsync(skip, limit);
-                return Ok(booking);
-            }
-
-
-            [HttpGet("{id:length(24)}")]
-            public async Task<IActionResult> GetById(string id)
-            {
-                var booking = await _bookingService.GetByIdAsync(id);
-                if (booking == null)
-                    return NotFound();
-                return Ok(booking);
-            }
-
-            [HttpPost]
-            public async Task<IActionResult> Create(Booking booking)
-            {
-                await _bookingService.CreateAsync(booking);
-                return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
-            }
+        // Method for retrieving a booking by its booking ID.
+        [HttpGet("by-booking-id/{bookingId}")]
+        public async Task<IActionResult> GetByBookingId(string bookingId, [FromQuery] int limit = 24)
+        {
+            var results = await _bookingService.GetByBookingIdAsync(bookingId, limit);
+            return results.Any() ? Ok(results) : NotFound();
+        }
 
 
-            [HttpPut("{id:length(24)}")]
-            public async Task<IActionResult> Update(string id, Booking booking)
-            {
-                var existing = await _bookingService.GetByIdAsync(id);
-                if (existing == null)
-                    return NotFound();
+        // Method for retrieving a booking by its MongoDB ID.
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var booking = await _bookingService.GetByIdAsync(id);
+            if (booking == null)
+                return NotFound();
+            return Ok(booking);
+        }
 
-            booking.Id = id;
-                await _bookingService.UpdateAsync(id, booking);
-                return NoContent();
-            }
 
-            [HttpDelete("{id:length(24)}")]
-            public async Task<IActionResult> Delete(string id)
-            {
-                var booking = await _bookingService.GetByIdAsync(id);
-                if (booking == null)
-                    return NotFound();
+        // Method for retrieving a booking by its size.
+        [HttpGet("size/{size:int}")]
+        public async Task<IActionResult> GetBySize(int size)
+        {
+            var booking = await _bookingService.GetBySizeAsync(size);
+            if (booking == null)
+                return NotFound();
+            return Ok(booking);
+        }
 
-                await _bookingService.DeleteAsync(id);
-                return NoContent();
-            }
+        // Post method for posting a booking 
+        [HttpPost]
+        public async Task<IActionResult> Create(string bookingId, int size, DateTime date)
+        {
+            await _bookingService.CreateAsync(bookingId, size, date);
+            return Ok();
+        }
+
+
+        //  Put method for updating
+        [HttpPut("{id:length(24)}")]
+        public async Task<IActionResult> Update(string id, int size, DateTime date)
+        {
+            var existing = await _bookingService.GetByIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            await _bookingService.UpdateAsync(id, size, date);
+            return NoContent();
+        }
+
+        // delete methid 
+        [HttpDelete("{id:length(24)}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var booking = await _bookingService.GetByIdAsync(id);
+            if (booking == null)
+                return NotFound();
+
+            await _bookingService.DeleteAsync(id);
+            return NoContent();
         }
     }
+}

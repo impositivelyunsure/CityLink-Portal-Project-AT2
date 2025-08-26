@@ -5,6 +5,7 @@ namespace AgileAPIAT2.Models
 {
     public class Booking
     {
+        // api model 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
@@ -13,7 +14,10 @@ namespace AgileAPIAT2.Models
         public string BookingId { get; set; } = string.Empty;
 
         [BsonElement("size")]
-        public string Size { get; set; } = string.Empty;
+        public int Size { get; set; }
+
+        [BsonElement("date")]
+        public DateTime Date { get; set; } = DateTime.UtcNow;
 
     }
 }
