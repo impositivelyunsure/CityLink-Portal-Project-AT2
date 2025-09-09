@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin Dashboard</h1>
+<p>Welcome, @ViewBag.Username!</p>
+
+<ul>
+    <li><a href="/Announcements">Manage Announcements</a></li>
+    <li><a href="/Service">Manage Services</a></li>
+    <li><a href="/Feedback">Review Feedback</a></li>
+    <li><a href="/Profile">User Profiles</a></li>
+</ul>
+
+<form id="logoutForm" method="post" action="/api/users/logout">
+    <button type="submit">Logout</button>
+</form>
+
+<script>
+document.getElementById('logoutForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const res = await fetch('/api/users/logout', { method: 'POST' });
+    if (res.ok) {
+        window.location.href = '/';
+    } else {
+        alert('Logout failed');
+    }
+});
+</script>

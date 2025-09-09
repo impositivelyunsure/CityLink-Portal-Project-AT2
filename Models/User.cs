@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
 public class User
 {
     [BsonId]
@@ -9,4 +10,7 @@ public class User
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
+
+    // role-based access (e.g., "User", "Admin")
+    public string Role { get; set; } = "User";
 }

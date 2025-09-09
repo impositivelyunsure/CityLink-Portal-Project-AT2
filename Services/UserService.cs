@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 public class UserService
 {
@@ -7,7 +8,7 @@ public class UserService
 
     public UserService(IOptions<MongoDbSettings> mongoSettings, IMongoClient client)
     {
-        var database = client.GetDatabase("userinfo");
+        var database = client.GetDatabase(mongoSettings.Value.DatabaseName ?? "userinfo");
         _users = database.GetCollection<User>("users");
     }
 
@@ -21,4 +22,36 @@ public class UserService
         await _users.InsertOneAsync(user);
     }
 
+    public async Task<User?> ValidateCredentialsAsync(string username, string password)
+    {
+        var user = await GetByUsernameAsync(username);
+        if (user == null) return null;
+
+        var ok = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        return ok ? user : null;
+    }
+
+    public async Task EnsureAdminUserAsync(string username, string email, string password, string role = "Admin")
+    {
+        var existingAdmin = await _users.Find(u => u.Role == "Admin").FirstOrDefaultAsync();
+        if (existingAdmin != null) return;
+
+        var existingByUsername = await GetByUsernameAsync(username);
+        if (existingByUsername != null && existingByUsername.Role != "Admin")
+        {
+            var update = Builders<User>.Update.Set(u => u.Role, "Admin");
+            await _users.UpdateOneAsync(u => u.Id == existingByUsername.Id, update);
+            return;
+        }
+
+        var hash = BCrypt.Net.BCrypt.HashPassword(password);
+        var admin = new User
+        {
+            Username = username,
+            Email = email,
+            PasswordHash = hash,
+            Role = role
+        };
+        await _users.InsertOneAsync(admin);
+    }
 }

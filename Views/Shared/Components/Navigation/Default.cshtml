@@ -14,11 +14,34 @@
                 </a>
             </li>
         }
+
+        @* Show admin link only if session role is Admin *@
+        @if (Context.Session.GetString("Role") == "Admin")
+        {
+            <li>
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")"
+                    href="/Admin">
+                    Admin Dashboard
+                </a>
+            </li>
+        }
     </ul>
-    <div class="navbar-auth"></div>
-        <a class="btn btn-login" asp-controller="Account" asp-action="Login">Login</a>
-        <a class="btn btn-register" asp-controller="Account" asp-action="Register">Register</a>
+
+    <div class="navbar-auth">
+        @if (Context.Session.GetString("Username") != null)
+        {
+            <span class="nav-link">Hello, @Context.Session.GetString("Username")!</span>
+            <form id="logoutForm" class="d-inline" method="post" action="/api/users/logout">
+                <button type="submit" class="btn btn-link nav-link">Sign Out</button>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-login" asp-controller="Account" asp-action="Login">Login</a>
+            <a class="btn btn-register" asp-controller="Account" asp-action="Register">Register</a>
+        }
     </div>
+
     <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
         ☰
     </button>
@@ -33,7 +56,6 @@
             const isOpen = nav.classList.toggle('show');
             btn.setAttribute('aria-expanded', String(isOpen));
         });
-        // close when clicking outside on small screens
         document.addEventListener('click', (e) => {
             if (!nav.classList.contains('show')) return;
             if (!nav.contains(e.target) && !btn.contains(e.target)) {
@@ -42,4 +64,14 @@
             }
         });
     })();
+
+    document.getElementById('logoutForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await fetch('/api/users/logout', { method: 'POST' });
+        if (res.ok) {
+            window.location.href = '/';
+        } else {
+            alert('Logout failed');
+        }
+    });
 </script>

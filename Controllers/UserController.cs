@@ -31,15 +31,28 @@ public class UsersController : ControllerBase
         return Ok("User registered successfully.");
     }
 
+
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        var user = await _userService.GetByUsernameAsync(dto.Username);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+        var user = await _userService.ValidateCredentialsAsync(dto.Username, dto.Password);
+        if (user == null)
         {
             return Unauthorized("Invalid username or password.");
         }
 
+        HttpContext.Session.SetString("Username", user.Username);
+        HttpContext.Session.SetString("Role", user.Role ?? "User");
+
         return Ok("Login successful.");
     }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return Ok("Logged out.");
+    }
+
+
 }
