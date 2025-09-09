@@ -42,6 +42,7 @@ public class UsersController : ControllerBase
         }
 
         HttpContext.Session.SetString("Username", user.Username);
+        HttpContext.Session.SetString("Email", user.Email);
         HttpContext.Session.SetString("Role", user.Role ?? "User");
 
         return Ok("Login successful.");

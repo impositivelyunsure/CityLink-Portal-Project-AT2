@@ -5,7 +5,6 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="card">
-    <p><strong>Name:</strong> John Doe</p>
-    <p><strong>Email:</strong> johndoe@example.com</p>
-    <p><strong>Member since:</strong> 2024</p>
+    <p><strong>Name:</strong> @Context.Session.GetString("Username")</p>
+    <p><strong>Email:</strong> @Context.Session.GetString("Email")</p>
 </div>

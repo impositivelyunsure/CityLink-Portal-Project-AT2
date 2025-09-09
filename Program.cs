@@ -32,6 +32,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<AnnouncementService>();
+builder.Services.AddSingleton<FeedbackService>();
 builder.Services.AddSingleton<BookingService>();
 
 builder.Services.AddDistributedMemoryCache(); // In-memory session store

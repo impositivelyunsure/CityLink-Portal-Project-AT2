@@ -1,13 +1,22 @@
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 public class Feedback
 {
-    [Required, StringLength(100)]
-    public string Name { get; set; } = string.Empty;
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
 
-    [Required, EmailAddress]
-    public string Email { get; set; } = string.Empty;
+    [BsonElement("name")]
+    public string Name { get; set; } = null!;
 
-    [Required, StringLength(2000, MinimumLength = 5)]
-    public string Message { get; set; } = string.Empty;
+    [BsonElement("email")]
+    public string Email { get; set; } = null!;
+
+    [BsonElement("message")]
+    public string Message { get; set; } = null!;
+
+    [BsonElement("dateSubmitted")]
+    public DateTime DateSubmitted { get; set; } = DateTime.Now;
 }

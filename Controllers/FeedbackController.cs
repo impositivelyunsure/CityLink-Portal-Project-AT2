@@ -1,30 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace SCP.Controllers
+public class FeedbackController : Controller
 {
-    public class FeedbackController : Controller
+    private readonly FeedbackService _feedbackService;
+
+    public FeedbackController(FeedbackService feedbackService)
     {
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        _feedbackService = feedbackService;
+    }
 
-        [HttpPost]
-        public IActionResult Submit(Feedback feedback)
-        {
-            if (ModelState.IsValid)
-            {
-                TempData["Message"] = "Thank you for your feedback!";
-                return RedirectToAction("ThankYou");
-            }
+    [HttpGet]
+    public IActionResult Index()
+    {
+        return View();
+    }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Submit(Feedback feedback)
+    {
+        if (!ModelState.IsValid)
             return View("Index", feedback);
-        }
 
-        public IActionResult ThankYou()
-        {
-            return View();
-        }
+        await _feedbackService.InsertAsync(feedback);
+        TempData["Message"] = "Thank you for your feedback!";
+        return RedirectToAction("ThankYou");
+    }
+
+    public IActionResult ThankYou()
+    {
+        return View();
     }
 }

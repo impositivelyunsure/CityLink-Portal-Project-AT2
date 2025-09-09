@@ -10,8 +10,8 @@
 @foreach (var announcement in Model)
 {
     <li>
-        <strong>@announcement.Title</strong> - @announcement.DatePosted.ToShortDateString()
-        <p>@announcement.Description</p>
+        <strong>@announcement.Title</strong> - @announcement.Date.ToShortDateString()
+        <p>@announcement.Content</p>
     </li>
 }
 </ul>
