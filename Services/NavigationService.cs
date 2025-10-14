@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace SCP.Services
 {
@@ -18,12 +19,21 @@ namespace SCP.Services
             if (!File.Exists(path)) yield break;
 
             var doc = XDocument.Load(path);
-            var items = doc.Descendants("Item")
-                           .Select(x => new MenuItem(
-                               x.Attribute("title")?.Value ?? "",
-                               x.Attribute("url")?.Value ?? "/"
-                           ));
-            foreach (var item in items) yield return item;
+            var items = doc.Descendants("Item");
+
+            foreach (var item in items)
+            {
+                var title = item.Attribute("title")?.Value ?? "";
+                var url = item.Attribute("url")?.Value ?? "/";
+
+                // Skip profile menu item if user is not logged in
+                // if (title == "My Profile" && string.IsNullOrEmpty(_httpContextAccessor.HttpContext?.Session.GetString("Username")))
+                // {
+                //     continue;
+                // }
+
+                yield return new MenuItem(title, url);
+            }
         }
     }
 }

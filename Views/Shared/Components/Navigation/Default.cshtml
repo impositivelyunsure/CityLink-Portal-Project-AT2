@@ -15,18 +15,28 @@
             </li>
         }
 
-        @* Show admin link only if session role is Admin *@
-        @if (Context.Session.GetString("Role") == "Admin")
+        @if (Context.Session.GetString("Username") != null)
         {
+            <li><a class="nav-link" href="/profile">My Profile</a></li>
+            @if (Context.Session.GetString("Role") == "Admin")
+            {
+                <li><a class="nav-link" href="/Admin">Admin Dashboard</a></li>
+            }
             <li>
-                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")"
-                    href="/Admin">
-                    Admin Dashboard
-                </a>
+                <form id="logoutForm" method="post" action="/api/users/logout" style="display:inline;">
+                    <button type="submit" class="btn btn-link nav-link">Sign Out</button>
+                </form>
             </li>
         }
+        else
+        {
+            <div class="navbar-auth">
+                <li><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                <li><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+            </div>
+        }
     </ul>
-
+    @* 
     <div class="navbar-auth">
         @if (Context.Session.GetString("Username") != null)
         {
@@ -40,7 +50,7 @@
             <a class="btn btn-login" asp-controller="Account" asp-action="Login">Login</a>
             <a class="btn btn-register" asp-controller="Account" asp-action="Register">Register</a>
         }
-    </div>
+    </div> *@
 
     <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
         ☰

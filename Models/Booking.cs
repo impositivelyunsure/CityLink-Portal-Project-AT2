@@ -4,7 +4,6 @@ using MongoDB.Bson.Serialization.Attributes;
 
 public class Booking
 {
-    // Booking Model
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }

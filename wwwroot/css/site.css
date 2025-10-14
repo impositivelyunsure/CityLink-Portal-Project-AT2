@@ -106,8 +106,7 @@ label {
   margin-bottom: 0.25rem;
 }
 
-input[type="text"],
-input[type="email"],
+input,
 textarea,
 select {
   width: 100%;
@@ -251,6 +250,10 @@ footer {
 .navbar-auth {
   display: flex;
   gap: 0.5rem;
+  width: 100%
+}
+.navbar-auth>li {
+  width: 100%;
 }
 
 .btn {
@@ -324,28 +327,26 @@ footer {
   }
 
   .nav {
+    display: none;
     position: fixed;
+    top: 56px;
     left: 0;
     right: 0;
-    top: 56px;
-    margin: 0;
-    padding: 1rem 0.75rem;
+    bottom: 0;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
     background: linear-gradient(180deg, rgba(11, 16, 32, 0.98), rgba(7, 10, 20, 0.98));
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
     flex-direction: column;
-    gap: 0.5rem;
-    min-height: calc(100vh - 56px);
-    transform: translateY(-8px);
-    transition: transform .22s cubic-bezier(.2, .9, .25, 1), opacity .18s ease;
+    gap: 0.75rem;
     opacity: 0;
-    z-index: 46;
-    box-shadow: 0 14px 40px rgba(2, 6, 23, 0.6);
-    display: flex;
-    align-items: stretch;
+    transform: translateY(-10px);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    z-index: 48;
   }
 
   .nav.show {
+    display: flex;
     transform: translateY(0);
     opacity: 1;
   }
@@ -359,6 +360,7 @@ footer {
     width: 100%;
     padding: 14px 16px;
     font-size: 1.02rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 10px;
     color: #fff;
     background: transparent;
@@ -391,9 +393,6 @@ footer {
     margin-left: 0;
   }
 
-  .navbar-auth {
-    display: none;
-  }
 
   .navbar-toggle {
     display: block;

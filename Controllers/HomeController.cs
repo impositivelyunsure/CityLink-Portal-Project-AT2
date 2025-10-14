@@ -8,5 +8,10 @@ namespace SCP.Controllers
         {
             return View();
         }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }

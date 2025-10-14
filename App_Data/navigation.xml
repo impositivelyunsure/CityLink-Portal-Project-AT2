@@ -3,8 +3,8 @@
   <Menu>
     <Item title="Home" url="/" />
     <Item title="Announcements" url="/Announcements" />
-    <Item title="Services" url="/Services/Book" />
+    <Item title="Services" url="/Booking" />
     <Item title="Feedback" url="/Feedback" />
-    <Item title="My Profile" url="/Profile" />
+    <!-- <Item title="My Profile" url="/Profile" /> -->
   </Menu>
 </Navigation>

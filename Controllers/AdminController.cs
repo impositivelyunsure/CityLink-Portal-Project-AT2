@@ -1,43 +1,57 @@
-// FILE: Controllers/AdminController.cs
 using Microsoft.AspNetCore.Mvc;
-using SCP.Services;
 
 public class AdminController : Controller
 {
     private readonly UserService _userService;
     private readonly AnnouncementService _announcementService;
     private readonly FeedbackService _feedbackService;
+    private readonly BookingService _bookingService;
 
-    public AdminController(UserService userService, AnnouncementService announcementService, FeedbackService feedbackService)
+    public AdminController(UserService userService, AnnouncementService announcementService, FeedbackService feedbackService, BookingService bookingService)
     {
         _userService = userService;
         _announcementService = announcementService;
         _feedbackService = feedbackService;
+        _bookingService = bookingService;
     }
 
     private bool IsAdmin() =>
         HttpContext.Session.GetString("Role")?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true;
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int limit = 20)
     {
         if (!IsAdmin())
             return RedirectToAction("Login", "Account");
+
+        var skip = (page - 1) * limit;
+        var bookings = await _bookingService.GetAllAsync(skip, limit);
+        var totalCount = await _bookingService.GetCountAsync();
+        var totalPages = (int)Math.Ceiling((double)totalCount / limit);
+
+        if (page < 1 || page > totalPages) page = 1;
 
         var users = await _userService.GetAllAsync();
         var announcements = await _announcementService.GetAllAsync();
         var feedback = await _feedbackService.GetAllAsync();
 
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.Limit = limit;
+
         var vm = new AdminDashboardViewModel
         {
             Users = users,
             Announcements = announcements,
-            Feedback = feedback
+            Feedback = feedback,
+            Bookings = bookings,
+            CurrentPage = page,
+            TotalPages = totalPages,
+            Limit = limit
         };
 
         return View(vm);
     }
 
-    // ---------------- USERS ----------------
     [HttpPost]
     public async Task<IActionResult> DeleteUser(string id)
     {
@@ -54,7 +68,6 @@ public class AdminController : Controller
         return RedirectToAction("Index");
     }
 
-    // ---------------- ANNOUNCEMENTS ----------------
     [HttpPost]
     public async Task<IActionResult> AddAnnouncement(string title, string content)
     {
@@ -64,10 +77,10 @@ public class AdminController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteAnnouncement(string id)
+    public async Task<IActionResult> DeleteBooking(string id)
     {
         if (!IsAdmin()) return Unauthorized();
-        await _announcementService.DeleteAsync(id);
+        await _bookingService.DeleteAsync(id);
         return RedirectToAction("Index");
     }
 }

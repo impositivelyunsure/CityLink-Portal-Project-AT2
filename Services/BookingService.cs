@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 public class BookingService
@@ -13,10 +14,14 @@ public class BookingService
     {
         return await _bookings
             .Find(_ => true)
+            .SortByDescending(b => b.Date)
             .Skip(skip)
             .Limit(limit)
             .ToListAsync();
     }
+
+    public async Task<long> GetCountAsync() =>
+        await _bookings.CountDocumentsAsync(_ => true);
 
 
     public async Task<List<Booking>> GetByBookingIdAsync(string bookingId, int limit = 24) =>
@@ -59,8 +64,8 @@ public class BookingService
     public async Task DeleteAsync(string id) =>
         await _bookings.DeleteOneAsync(r => r.Id == id);
 
-    public async Task<List<Booking>> GetAllAsync(int limit = 20)
-    {
-        return await _bookings.Find(_ => true).Limit(limit).ToListAsync();
-    }
+    // public async Task<List<Booking>> GetAllAsync(int limit = 20)
+    // {
+    //     return await _bookings.Find(_ => true).Limit(limit).ToListAsync();
+    // }
 }
