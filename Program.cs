@@ -4,17 +4,22 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SCP.Services;
 
+// Required services for UI and basic web functionality
 var builder = WebApplication.CreateBuilder(args);
 
+// Add MVC support for views and controllers
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
+// Configure data protection for secure data handling
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(@"./keys"))
     .SetApplicationName("SmartCommunityPortal");
 
+// Add navigation service for UI menu handling
 builder.Services.AddSingleton<NavigationService>();
 
+// Configure MongoDB settings and services
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
@@ -31,12 +36,14 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
+// Register application services
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<AnnouncementService>();
 builder.Services.AddSingleton<FeedbackService>();
 builder.Services.AddSingleton<BookingService>();
 
-builder.Services.AddDistributedMemoryCache(); // In-memory session store
+// Configure session state for user experience
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -46,12 +53,14 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
+// Configure error handling and security headers for production
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+// Disable caching for all responses
 app.Use(async (context, next) =>
 {
     context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
@@ -60,21 +69,21 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// Configure the HTTP request pipeline for UI
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 app.UseSession();
 
+// Configure routing for MVC
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
 
-// Mock Admin
+// mock admin user for testing
 using (var scope = app.Services.CreateScope())
 {
     var users = scope.ServiceProvider.GetRequiredService<UserService>();

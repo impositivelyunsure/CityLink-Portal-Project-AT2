@@ -23,12 +23,7 @@ public class FeedbackController : Controller
             return View("Index", feedback);
 
         await _feedbackService.InsertAsync(feedback);
-        TempData["Message"] = "Thank you for your feedback!";
-        return RedirectToAction("ThankYou");
+        return Redirect("/");
     }
 
-    public IActionResult ThankYou()
-    {
-        return View();
-    }
 }

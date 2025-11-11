@@ -83,4 +83,11 @@ public class AdminController : Controller
         await _bookingService.DeleteAsync(id);
         return RedirectToAction("Index");
     }
+    [HttpPost]
+    public async Task<IActionResult> DeleteAnnouncement(string id)
+    {
+        if (!IsAdmin()) return Unauthorized();
+        await _announcementService.DeleteAsync(id);
+        return RedirectToAction("Index");
+    }
 }
