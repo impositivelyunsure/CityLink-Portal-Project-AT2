@@ -17,13 +17,13 @@ public class BookingController : Controller
     }
 
     [HttpPost("book")]
-    public async Task<IActionResult> Book(string serviceType, DateTime date, int size)
+    public async Task<IActionResult> Book(string serviceType, DateTime date, string notes)
     {
-        await _bookingService.CreateAsync(serviceType, size, date);
+        await _bookingService.CreateAsync(serviceType, notes, date);
         var booking = new Booking
         {
             BookingId = serviceType,
-            Size = size,
+            Notes = notes,
             Date = date
         };
         return View("Confirmation", booking);

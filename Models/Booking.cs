@@ -11,8 +11,8 @@ public class Booking
     [BsonElement("booking_id")]
     public string BookingId { get; set; } = string.Empty;
 
-    [BsonElement("size")]
-    public int Size { get; set; }
+    [BsonElement("notes")]
+    public string Notes { get; set; }
 
     [BsonElement("date")]
     public DateTime Date { get; set; } = DateTime.UtcNow;

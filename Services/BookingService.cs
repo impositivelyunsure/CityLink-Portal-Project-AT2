@@ -35,39 +35,24 @@ public class BookingService
                .Limit(limit)
                .ToListAsync();
 
-    // Gets bookings by size with a specified limit
-    public async Task<List<Booking>> GetBySizeAsync(int size, int limit = 24) =>
-        await _bookings.Find(r => r.Size == size)
-                .Limit(limit)
-                .ToListAsync();
-
     // Retrieves a single booking by its MongoDB ID
     public async Task<Booking?> GetByIdAsync(string id) =>
         await _bookings.Find(r => r.Id == id).FirstOrDefaultAsync();
 
     // Creates a new booking with specified details
-    public async Task CreateAsync(string bookingId, int size, DateTime date)
+    public async Task CreateAsync(string bookingId, string notes, DateTime date)
     {
         var booking = new Booking
         {
             Id = null, // MongoDB will generate this
             BookingId = bookingId,
-            Size = size,
+            Notes = notes,
             Date = date
         };
 
         await _bookings.InsertOneAsync(booking);
     }
 
-    // Updates an existing booking's size and date
-    public async Task UpdateAsync(string id, int size, DateTime date)
-    {
-        var update = Builders<Booking>.Update
-            .Set(b => b.Size, size)
-            .Set(b => b.Date, date);
-
-        await _bookings.UpdateOneAsync(b => b.Id == id, update);
-    }
 
     // Deletes a booking by its ID
     public async Task DeleteAsync(string id) =>
