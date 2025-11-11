@@ -1,0 +1,84 @@
+@model IEnumerable<SCP.Services.NavigationService.MenuItem>
+
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
+    <a class="navbar-brand" href="/">Smart Community Portal</a>
+    <ul class="nav">
+        @foreach (var item in Model)
+        {
+            var currentPath = Context.Request.Path.Value?.TrimEnd('/').ToLower() ?? "";
+            var itemPath = item.Url.TrimEnd('/').ToLower();
+
+            bool isActive;
+            if (itemPath == "" || itemPath == "/") // Home link
+            {
+                isActive = string.IsNullOrEmpty(currentPath) || currentPath == "/";
+            }
+            else
+            {
+                isActive = currentPath == itemPath || currentPath.StartsWith(itemPath + "/");
+            }
+
+            <li>
+                <a class="nav-link @(isActive ? "active" : "")"
+                   href="@item.Url"
+                   aria-current="@(isActive ? "page" : null)">
+                    @item.Title
+                </a>
+            </li>
+        }
+
+        @if (Context.Session.GetString("Username") != null)
+        {
+            <li><a class="nav-link" href="/profile">My Profile</a></li>
+            @if (Context.Session.GetString("Role") == "Admin")
+            {
+                <li><a class="nav-link" href="/Admin">Admin Dashboard</a></li>
+            }
+            <li>
+                <form id="logoutForm" method="post" action="/api/users/logout" style="display:inline;">
+                    <button type="submit" class="btn btn-link nav-link">Sign Out</button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <div class="navbar-auth">
+            <li><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+            <li><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+            </div>
+        }
+    </ul>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">
+        ☰
+    </button>
+</nav>
+
+<script>
+    (function () {
+        const btn = document.querySelector('.nav-toggle');
+        const nav = document.querySelector('.nav');
+        if (!btn || !nav) return;
+        btn.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('show');
+            btn.setAttribute('aria-expanded', String(isOpen));
+        });
+        document.addEventListener('click', (e) => {
+            if (!nav.classList.contains('show')) return;
+            if (!nav.contains(e.target) && !btn.contains(e.target)) {
+                nav.classList.remove('show');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
+
+    document.getElementById('logoutForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await fetch('/api/users/logout', { method: 'POST' });
+        if (res.ok) {
+            window.location.href = '/';
+        } else {
+            alert('Logout failed');
+        }
+    });
+</script>

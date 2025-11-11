@@ -1,0 +1,8 @@
+.navbar .home-link {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.navbar .home-link:hover {
+    text-decoration: underline;
+}

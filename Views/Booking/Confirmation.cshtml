@@ -1,0 +1,26 @@
+@model Booking
+@{
+    ViewData["Title"] = "Booking Confirmation";
+}
+
+<h1>Booking Submitted</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<p>Thank you for your booking request. Here are the details:</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Service Type:</dt>
+    <dd class="col-sm-9">@Model.BookingId</dd>
+
+    <dt class="col-sm-3">Size:</dt>
+    <dd class="col-sm-9">@Model.Size</dd>
+
+    <dt class="col-sm-3">Preferred Date:</dt>
+    <dd class="col-sm-9">@Model.Date.ToShortDateString()</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-primary">Back to Booking</a>

@@ -1,0 +1,32 @@
+@model Feedback
+
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+<h1>Send Us Your Feedback</h1>
+
+<form asp-action="Submit" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" aria-required="true" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" inputmode="email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+    <div>
+        <label asp-for="Message"></label>
+        <textarea asp-for="Message" rows="5" aria-required="true"></textarea>
+        <span asp-validation-for="Message"></span>
+    </div>
+
+    <button type="submit">Send</button>
+</form>

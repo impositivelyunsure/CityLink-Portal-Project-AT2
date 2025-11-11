@@ -1,0 +1,28 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Smart Community Portal</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="site-header" role="banner">
+        @await Component.InvokeAsync("Navigation")
+    </header>
+
+    <div role="status" aria-live="polite" class="sr-only">@TempData["Message"]</div>
+
+    <main id="main" role="main" class="container" tabindex="-1">
+        @RenderBody()
+    </main>
+
+    <footer role="contentinfo" class="site-footer">
+        <p>&copy; @DateTime.Now.Year - CityLink Initiatives</p>
+        <p><a href="/Home/Privacy">Privacy</a></p>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

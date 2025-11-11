@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="card">
+    <p><strong>Name:</strong> @Context.Session.GetString("Username")</p>
+    <p><strong>Email:</strong> @Context.Session.GetString("Email")</p>
+</div>

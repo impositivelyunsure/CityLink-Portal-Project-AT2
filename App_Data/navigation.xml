@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Navigation>
+  <Menu>
+    <Item title="Home" url="/" />
+    <Item title="Announcements" url="/Announcements" />
+    <Item title="Services" url="/Bookings" />
+    <Item title="Feedback" url="/Feedback" />
+    <!-- <Item title="My Profile" url="/Profile" /> -->
+  </Menu>
+</Navigation>
